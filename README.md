@@ -1,4 +1,6 @@
-# MySQL数据库实验
+
+
+# 修改MySQL数据库实验
 
 ## 1.数据库定义与操作
 
@@ -424,7 +426,7 @@ GROUP BY单独使用 GROUP BY 关键字时，查询结果会只显示每个分�
 
 #### 3.1.7ORDER BY 关键字主要用来将查询结果中的数据按照一定的顺序进行排序。
 
-***\*其语法格式如下：\****
+其语法格式如下：
 
 ```
 ORDER BY <字段名> [ASC|DESC]
@@ -736,7 +738,7 @@ create view v_dp as select  from department with check option;
  
 
 ```
-create view v_em(employeeID,name,realIncome) as select employee.employeeID,employee.name,(salary.income -\**** ***\*salary.outcome ) as realIncome from  employee  join  salary on employee.employeeID = salary.employeeID;
+create view v_em(employeeID,name,realIncome) as select employee.employeeID,employee.name,(salary.income - salary.outcome ) as realIncome from  employee  join  salary on employee.employeeID = salary.employeeID;
 ```
 
 ![img](images\wps72.jpg)
@@ -1783,3 +1785,1005 @@ delimiter ;
 ![img](images\wps87.jpg) 
 
 可见，当Employee中EmployeeID = 102208的workYear + 2时，对应的salary增加了1000.说明触发器是起了作用了。
+
+## 10.SQL语句备份与恢复实验
+
+> ​	数据库的主要作用就是对数据进行保存和维护，所以备份数据是数据库管理中最常用的操作。为了防止数据库意外崩溃或硬件损伤而导致的数据丢失，数据库系统提供了备份和恢复策略。保证数据安全的最重要的一个措施就是定期的对数据库进行备份。这样即使发生了意外，也会把损失降到最低。
+>
+> ​	数据库备份是指通过导出数据或者复制表文件的方式来制作数据库的副本。当数据库出现故障或遭到破坏时，将备份的数据库加载到系统，从而使数据库从错误状态恢复到备份时的正确状态
+
+### 10.1MySQL 导出数据
+
+#### 10.1.1语句基本格式如下:
+
+```
+SELECT 列名 FROM table [WHERE 语句] INTO OUTFILE '目标文件' [OPTIONS]
+```
+
+该语句用 SELECT 来查询所需要的数据，用 INTO OUTFILE 来导出数据。其中，`目标文件`用来指定将查询的记录导出到哪个文件。这里需要注意的是，目标文件不能是一个已经存在的文件。
+
+[OPTIONS] 为可选参数选项，OPTIONS 部分的语法包括 FIELDS 和 LINES 子句，其常用的取值有：
+
+- FIELDS TERMINATED BY '字符串'：设置字符串为字段之间的分隔符，可以为单个或多个字符，默认情况下为制表符‘\t’。
+- FIELDS [OPTIONALLY] ENCLOSED BY '字符'：设置字符来括上 CHAR、VARCHAR 和 TEXT 等字符型字段。如果使用了 OPTIONALLY 则只能用来括上 CHAR 和 VARCHAR 等字符型字段。
+- FIELDS ESCAPED BY '字符'：设置如何写入或读取特殊字符，只能为单个字符，即设置转义字符，默认值为‘\’。
+- LINES STARTING BY '字符串'：设置每行开头的字符，可以为单个或多个字符，默认情况下不使用任何字符。
+- LINES TERMINATED BY '字符串'：设置每行结尾的字符，可以为单个或多个字符，默认值为‘\n’ 。
+
+**注意：FIELDS 和 LINES 两个子句都是自选的，但是如果两个都被指定了，FIELDS 必须位于 LINES的前面。**
+
+#### 10.1.2开放MySQL的导入导出文件权限
+
+在进行对数据库数据备份时如果不开放MySQL的导入导出文件权限，那么导入导出时将遇到提示
+
+```
+Mysql 导入文件提示 --secure-file-priv option 问题
+```
+
+首先使用命令进行查看
+
+```
+ show variables like "%secure%"
+```
+
+![image-20201218143048655](E:\学习专用\数据库综合实验\资料整理\images\image-20201218143048655.png)
+
+（1）NULL，表示禁止。
+
+（2）如果value值有文件夹目录，则表示只允许该目录下文件（PS：测试子目录也不行）。
+
+（3）如果为空，则表示不限制目录。
+
+#### 10.1.3解决方案
+
+（1）方案一：
+
+把导入文件放入secure-file-priv目前的value值对应路径即可。
+
+（2）方案二：
+
+把secure-file-priv的value值修改为准备导入文件的放置路径。
+
+（3）方案三：修改配置
+
+去掉导入的目录限制。可修改mysql配置文件（Windows下为my.ini, Linux下的my.cnf），在[mysqld]下面，查看是否有：
+
+secure_file_priv =
+
+如上这样一行内容，如果没有，则手动添加。如果存在如下行：
+
+secure_file_priv = /home 
+
+这样一行内容，表示限制为/home文件夹。而如下行：
+
+secure_file_priv =
+
+这样一行内容，表示不限制目录，等号一定要有，否则mysql无法启动。
+
+修改完配置文件后，重启mysql生效。
+
+重启后：
+
+关闭：service mysqld stop
+
+启动：service mysqld start
+
+**比如在Linux中修改配置文件（安装目录下 etc/mysql/my.cnf）使用 ：**
+
+```
+vim  etc/mysql/my.cnf 
+```
+
+![image-20201218144008566](E:\学习专用\数据库综合实验\资料整理\images\image-20201218144008566.png)
+
+
+
+### 10.2MySQL之mysqldump的使用
+
+#### 10.2.1mysqldump 简介
+
+`mysqldump` 是 `MySQL` 自带的逻辑备份工具。
+
+它的备份原理是通过协议连接到 `MySQL` 数据库，将需要备份的数据查询出来，将查询出的数据转换成对应的`insert` 语句，当我们需要还原这些数据时，只要执行这些 `insert` 语句，即可将对应的数据还原。
+
+#### 10.2.2备份命令
+
+#### 命令格式
+
+```java
+mysqldump [选项] 数据库名 [表名] > 脚本名
+```
+
+或
+
+```java
+mysqldump [选项] --数据库名 [选项 表名] > 脚本名
+```
+
+或
+
+```java
+mysqldump [选项] --all-databases [选项]  > 脚本名
+```
+
+```
+mysqldump只导出整个数据库结构（不包含数据）
+mysqldump -h localhost –u root -p  -d database > xxx.sql
+
+mysqldump只导出单个数据表结构（不包含数据）
+mysqldump -h localhost –u root -p  -d database table > xxx.sql
+mysqldump只导出整个数据库的数据（不包含结构）
+mysqldump -h localhost –u root -p  -t database > xxx.sql
+
+mysqldump只导出单个数据表的数据（不包含结构）
+mysqldump -h localhost –u root -p  -t database table > xxx.sql
+
+
+```
+
+ **选项说明**
+
+| 参数名                          | 缩写 | 含义                          |
+| ------------------------------- | ---- | ----------------------------- |
+| --host                          | -h   | 服务器IP地址                  |
+| --port                          | -P   | 服务器端口号                  |
+| --user                          | -u   | MySQL 用户名                  |
+| --pasword                       | -p   | MySQL 密码                    |
+| --databases                     |      | 指定要备份的数据库            |
+| --all-databases                 |      | 备份mysql服务器上的所有数据库 |
+| --compact                       |      | 压缩模式，产生更少的输出      |
+| --comments                      |      | 添加注释信息                  |
+| --complete-insert               |      | 输出完成的插入语句            |
+| --lock-tables                   |      | 备份前，锁定所有数据库表      |
+| --no-create-db/--no-create-info |      | 禁止生成创建数据库语句        |
+| --force                         |      | 当出现错误时仍然继续备份操作  |
+| --default-character-set         |      | 指定默认字符集                |
+| --add-locks                     |      | 备份数据库表时锁定数据库表    |
+
+#### 10.2.3 实例
+
+备份所有数据库：
+
+```java
+mysqldump -h localhost -P 3306 -uroot -p --all-databases > /backup/back/all.db
+```
+
+备份指定数据库：
+
+```java
+mysqldump -h localhost -P 3306 -uroot -p dbms > /mysql/data/dbms/back/dbms.db
+```
+
+备份指定数据库指定表(多个表以空格间隔,这里备份的是数据库dbms下的employee ，salary和 department这三个表)
+
+```java
+mysqldump -h localhost -P 3306 -uroot -p dbms employee salary department > /mysql/data/dbms/back/emp-salary-dep.db
+```
+
+备份指定数据库排除某些表（备份除了employee表外的dbms数据库中的表。）
+
+```java
+mysqldump -h localhost -P 3306  -uroot -p dbms --ignore-table=dbms.employee  > /mysql/data/dbms/back/salary-dep.db
+```
+
+![image-20201218164139527](E:\学习专用\数据库综合实验\资料整理\images\image-20201218164139527.png)
+
+#### 10.2.4还原命令
+
+##### 10.2.4.1 系统行命令
+
+```java
+mysqladmin -h localhost -P 3306 -uroot -p create db_name 
+mysql  -uroot -p  db_name < /mysql/data/dbms/back/db_name.db
+
+注：在导入备份数据库前，db_name如果没有，是需要创建的； 而且与db_name.db中数据库名是一样的才可以导入。
+```
+
+##### 10.2.4.2soure 方法
+
+```java
+mysql > use db_name
+mysql > source /mysql/data/dbms/back/db_name.db
+```
+
+
+
+### 10.3导入数据
+
+#### 10.3.1mysql 命令导入
+
+使用 mysql 命令导入语法格式为：
+
+```
+mysql -h localhost -P 3306 -u 用户名    -p 密码    <  要导入的数据库数据
+```
+
+**实例：**
+
+```
+mysql -h localhost -P 3306 -u root -p dbms < /mysql/data/dbms/back/salary.sql;
+
+```
+
+以上命令将备份的整个数据库 salary.sql 导入。
+
+------
+
+#### 10.3.2 source 命令导入
+
+source 命令导入数据库需要先登录到数库终端：
+
+```
+mysql> create database dbms;      # 创建数据库
+mysql> use dbms;                  # 使用已创建的数据库 
+mysql> set names utf8;           # 设置编码
+mysql> source /home/mysql/data/dbms/back/salary.sql  # 导入备份数据库
+```
+
+------
+
+#### 10.3.3使用 LOAD DATA 导入数据
+
+基本语法：
+
+```
+　　load data  [low_priority] [local] infile 'file_name txt' [replace | ignore]
+　　into table tbl_name
+　　fields
+　　[terminated by'\t']
+　　[OPTIONALLY] enclosed by '']
+　　[escaped by'\' ]]
+　　[lines terminated by'\n']
+　　[ignore number lines]
+　　[(col_name)]
+```
+
+> 说明：
+>
+> load data infile语句从一个文本文件中以很高的速度读入一个表中。使用这个命令之前，mysqld进程（服务）必须已经在运行。由于安全原因，当读取位于服务器上的文件时，文件必须处于数据库目录或可被所有人读取。另外，为了对服务器上文件使用load data infile，在服务器主机上必须有file的权限。
+>
+> 1、如果你指定关键词low_priority，那么MySQL将会等到没有其他人读这个表的时候，才把数据插入。可以使用如下的命令： 
+> 　　load data  low_priority infile "/home/mark/data sql" into table Orders;
+>
+> 2、如果指定local关键词，则表明从客户主机读文件。如果local没指定，文件必须位于服务器上。
+>
+> 3、replace和ignore关键词控制对现有的唯一键记录的重复的处理。如果你指定replace，新行将代替有相同的唯一键值的现有行。如果你指定ignore，跳过有唯一键的现有行的重复行的输入。如果你不指定任何一个选项，当找到重复键时，出现一个错误，并且文本文件的余下部分被忽略。例如：
+> 　　load data  low_priority infile "/home/mark/data sql" replace into table Orders;
+>
+> 4、分隔符
+> （1） fields关键字指定了文件字段的分割格式，如果用到这个关键字，MySQL剖析器希望看到至少有下面的一个选项： 
+> 　　　　terminated by分隔符：意思是以什么字符作为分隔符
+> 　　　　enclosed by字段括起字符
+> 　　　　escaped by转义字符
+> 　　　　terminated by描述字段的分隔符，默认情况下是tab字符（\t） 
+> 　　　　enclosed by描述的是字段的括起字符。
+> 　　　　escaped by描述的转义字符。默认的是反斜杠（backslash：\ ）  
+> 　　　例如：load data infile "/home/mark/Orders txt" replace into table Orders fields terminated by',' enclosed by '"';
+>
+> （2）lines 关键字指定了每条记录的分隔符默认为'\n'即为换行符
+> 　　如果两个字段都指定了，那fields必须在lines之前。如果不指定fields关键字，缺省值与这样写相同： fields terminated by'\t' enclosed by ’ '' ‘ escaped by'\\'
+> 　　如果你不指定一个lines子句，缺省值与这样写的相同： lines terminated by'\n'
+> 　　例如：load data infile "/jiaoben/load.txt" replace into table test fields terminated by ',' lines terminated by '\n';
+>
+> 5、 load data infile 可以按指定的列把文件导入到数据库中。 当我们要把数据的一部分内容导入的时候，，需要加入一些栏目（列/字段/field）到MySQL数据库中，以适应一些额外的需要。比如，我们要从Oracle数据库升级到MySQL数据库的时候，
+> 下面的例子显示了如何向指定的栏目(field)中导入数据： 
+> 　　load data infile "/home/Order txt" into table Orders(Order_Number, Order_Date, Customer_ID);
+>
+> 6.IGNORE number LINES: 忽略文件前几行。
+>
+> 7.当在服务器主机上寻找文件时，服务器使用下列规则： 
+> （1）如果给出一个绝对路径名，服务器使用该路径名。 
+> （2）如果给出一个有一个或多个前置部件的相对路径名，服务器相对服务器的数据目录搜索文件。  
+> （3）如果给出一个没有前置部件的一个文件名，服务器在当前数据库的数据库目录寻找文件。 
+> 例如： /myfile txt”给出的文件是从服务器的数据目录读取，而作为“myfile txt”给出的一个文件是从当前数据库的数据库目录下读取。
+>
+>
+> 注意：字段中的空值用\N表示
+
+
+
+#### 10.3.4使用 mysqlimport 导入数据
+
+mysqlimport 客户端提供了 LOAD DATA INFILEQL 语句的一个命令行接口。mysqlimport 的大多数选项直接对应 LOAD DATA INFILE 子句。
+
+从文件 salary.txt 中将数据导入到 dbms数据库中的salary表中, 可以使用以下命令：
+
+```
+$ mysqlimport -u root -p --local dbms salary.txt
+password *****
+```
+
+mysqlimport 命令可以指定选项来设置指定格式,命令语句格式如下：
+
+```
+$ mysqlimport -u root -p --local --fields-terminated-by=":" 
+   --lines-terminated-by="\r\n"  dbms salary.txt
+password *****
+```
+
+mysqlimport 语句中使用 --columns 选项来设置列的顺序：
+
+```
+$ mysqlimport -u root -p --local --columns=b,c,a 
+    dbms salary.txt
+password *****
+```
+
+------
+
+​    **使用mysqlimport -?命令，可以查看mysqlimport的具体参数及详细说明。下表是一些常见的选项：**
+
+| -c, --columns=name                   | Use only these columns to import the data to. Give the column names in a comma separated list. This is same as giving columns to LOAD DATA INFILE. | 该选项采用用逗号分隔的列名作为其值。列名的顺序指示如何匹配数据文件列和表列。 |
+| ------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| -C, --compress                       | Use compression in server/client protocol.                   | 压缩在客户端和服务器之间发送的所有信息（如果二者均支持压缩） |
+| -d, --delete                         | First delete all rows from table.                            | 新数据导入数据表中之前删除数据数据表中的所有信息             |
+| --fields-terminated-by=name          | Fields in the textfile are terminated by …                   | 指定数据之间的分隔符。默认的分隔符是跳格符（Tab）            |
+| --fields-enclosed-by=name            | Fields in the importfile are enclosed by ...                 | 指定文本文件中数据的记录是以什么括起的， 很多情况下数据以双引号括起。 默认的情况下数据是没有被字符括起的 |
+| --fields-optionally-enclosed-by=name | Fields in the i.file are opt. enclosed by …                  | 字段包括符，只用在CHAR和VERCHAR字段上                        |
+| --fields-escaped-by=name             | Fields in the i.file are escaped by ...                      | 转义字符                                                     |
+| -f, --force                          | Continue even if we get an sql-error.                        | 不管是否遇到错误，MySQLimport将强制继续插入数据              |
+| -?, --help                           | Displays this help and exits.                                | 显示帮助消息并退出                                           |
+| -h, --host=name                      | Connect to host.                                             | 将数据导入给定主机上的MySQL服务器。默认主机是localhost       |
+| -i, --ignore                         | If duplicate unique key was found, keep old row.             | 跳过或者忽略那些有相同唯一关键字的行， 导入文件中的数据将被忽略 |
+| --ignore-lines=#                     | Ignore first n lines of data infile.                         | 忽视数据文件的前n行                                          |
+| --lines-terminated-by=name           | Lines in the i.file are terminated by ...                    | 行记录分隔符。 默认的情况下MySQLimport以newline为行分隔符    |
+| -L, --local                          | Read all files through the client.                           | 从本地客户端读入输入文件                                     |
+| -l, --lock-tables                    | Lock all tables for write (this disables threads).           | 数据被插入之前锁住表，防止在更新数据库时，用户的查询和更新受到影响 |
+| --low-priority                       | Use LOW_PRIORITY when updating the table.                    | 低优先级                                                     |
+| -p, --password[=name]                | Password to use when connecting to server. If password is not given it's asked from the tty. | 提示输入密码                                                 |
+| -W, --pipe                           | Use named pipes to connect to server.                        | 使用命名管道连接服务器                                       |
+| -P, --port=#                         | Port number to use for connection or 0 for default to, in order of preference, my.cnf, $MYSQL_TCP_PORT, /etc/services, built-in default (3306). | 用于连接的TCP/IP端口号                                       |
+| --protocol=name                      | The protocol of connection (tcp,socket,pipe,memory).         | 连接使用的协议                                               |
+| -r, --replace                        | If duplicate unique key was found, replace old row.          | 与－i选项的作用相反；此选项将替代表中有相同唯一关键字的记录  |
+| --shared-memory-base-name=name       | Base name of shared memory.                                  | 共享内存连接名。该选项只用于Windows                          |
+| -s, --silent                         | Be more silent.                                              | 沉默模式。只有出现错误时才输出                               |
+| -S, --socket=name                    | Socket file to use for connection.                           | 当连接localhost时使用的套接字文件(为默认主机)                |
+| --use-threads=#                      | Load files in parallel. The argument is the number of threads to use for loading data. | 并行多线程导入个数                                           |
+| -u, --user=name                      | User for login if not current user.                          | 连接服务器时MySQL使用的用户名                                |
+| -v, --verbose                        | Print info about the various stages.                         | 冗长模式。打印出程序操作的详细信息                           |
+| -V, --version                        | Output version information and exit.                         | 显示版本（version）                                          |
+
+。
+
+
+
+#### 10.3.5测试用例（这里使用Ubuntu18.04服务器中使用Docker安装的MySQL8进行测试）
+
+##### 10.3.5.1将用不同的存放格式（自由设计）备份DBEM数据库中的employee, salary两个基本表，其中employee表要求只备份employeeID, name, education等三个字段。
+
+```sql
+select employeeID,name,education from employee into outfile "employee.csv" character set utf8 FIELDS TERMINATED BY '\t' ;
+
+```
+
+![image-20201218142646599](E:\学习专用\数据库综合实验\资料整理\images\image-20201218142646599.png)
+
+
+
+![image-20201218142727440](E:\学习专用\数据库综合实验\资料整理\images\image-20201218142727440.png)
+
+```sql
+select* from salary into outfile "salary.txt" character set utf8 FIELDS TERMINATED BY '\t' ;
+select* from department into outfile "department.docx" character set utf8 FIELDS TERMINATED BY '\t' ;
+
+```
+
+![image-20201218144512457](E:\学习专用\数据库综合实验\资料整理\images\image-20201218144512457.png)
+
+然后在备份中目录（secure_file_priv 的value中目录。笔者导出时直接outfile   “salary.txt”这里会默认将数据导出到mysql/data下中 dbms数据库对应文件夹名dbms的目录下）：
+
+![image-20201218144756169](E:\学习专用\数据库综合实验\资料整理\images\image-20201218144756169.png)
+
+![image-20201218145239171](E:\学习专用\数据库综合实验\资料整理\images\image-20201218145239171.png)
+
+
+
+##### 10.3.5.2根据上述任务所保存的文件，将相关数据恢复到基本表中，其中要求employee表在恢复之前事先随机删除几条记录，SQL语句中要求指定replace功能
+
+![image-20201218150712281](E:\学习专用\数据库综合实验\资料整理\images\image-20201218150712281.png)
+
+## ![img](file:///C:\Users\ADMINI~1\AppData\Local\Temp\ksohtml14552\wps5.jpg)![img](E:\学习专用\数据库综合实验\资料整理\images\wps6.jpg) 
+
+可以发现，使用replace命令会首先删除表中和所插入数据中键相同的数据然后再导入数据。并且除了employeeId，name,education这三项外都是NULL。
+
+
+
+## 11. 客户端工具备份与恢复实验
+
+### 11.1使用mysqldump命令备份DBEM数据库中的salary表
+
+将数据库dbms中的salary表备份到当前所在目录中（你所在文件夹下使用指令的地方）backup文件夹下的salary.sql文件中。
+
+```
+mysqldump -h localhost -P 3307 -u root -p dbms salary > backup/salary.sql
+```
+
+![image-20201218194833086](E:\学习专用\数据库综合实验\资料整理\images\image-20201218194833086.png)
+
+![image-20201218194803329](E:\学习专用\数据库综合实验\资料整理\images\image-20201218194803329.png)
+
+### 11.2.使用mysqldump命令备份整个DBEM数据库
+
+```
+mysqldump -h localhost -P 3307 -u root -p dbms --default-character-set=utf8 > backup/dbms.sql
+```
+
+将数据库dbms备份到当前所在目录中（你所在文件夹下使用指令的地方）backup文件夹下的dbms.sql文件中。
+
+![image-20201218195007875](E:\学习专用\数据库综合实验\资料整理\images\image-20201218195007875.png)
+
+![image-20201218194929936](E:\学习专用\数据库综合实验\资料整理\images\image-20201218194929936.png)
+
+### 11.3.删除employee表，然后使用mysql命令，利用上述保存的文件恢复employee表
+
+①首先删除employee表
+
+![image-20201218201559341](E:\学习专用\数据库综合实验\资料整理\images\image-20201218201559341.png)
+
+②从数据库dbms的的全备份dbms.sql中查询employee表的结构
+
+```
+sed -e'/./{H;$!d;}' -e 'x;/CREATE TABLE `employee`/!d;q' dbms.sql
+```
+
+![image-20201218201748317](E:\学习专用\数据库综合实验\资料整理\images\image-20201218201748317.png)
+
+②使用查询的Employee表结构在MySQL中创建employee表
+
+```
+DROP TABLE IF EXISTS `employee`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `employee` (
+  `employeeID` char(6) NOT NULL,
+  `name` char(10) NOT NULL,
+  `education` char(4) NOT NULL,
+  `birth` date NOT NULL,
+  `gender` tinyint(1) NOT NULL DEFAULT '1',
+  `workYear` tinyint(1) DEFAULT NULL,
+  `address` varchar(100) DEFAULT NULL,
+  `phone` char(12) DEFAULT NULL,
+  `departmentID` char(3：) DEFAULT NULL,
+  PRIMARY KEY (`employeeID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+ 
+```
+
+![image-20201218203847259](E:\学习专用\数据库综合实验\资料整理\images\image-20201218203847259.png)
+
+③从dbms.sql备份中查询出employee表的数据，并保存到employee.sql文件中
+
+```
+grep 'INSERT INTO `employee`' dbms.sql >employee.sql
+```
+
+![image-20201218201955024](E:\学习专用\数据库综合实验\资料整理\images\image-20201218201955024.png)
+
+④从employee.sql中恢复数据到MySQL的dbms数据库中的employee表。
+
+```
+mysql -h 121.4.41.89 -P 3307 -u root -p dbms --default-character-set=utf8 < employee.sql
+```
+
+![image-20201218221330238](E:\学习专用\数据库综合实验\资料整理\images\image-20201218221330238.png)
+
+这样数据就完整地从全备份数据库dbms.sql中提取出来最终恢复到MySQL数据库了。
+
+**ps：在进行导入导出文件是需要设置默认编码，为了防止乱码**
+
+### 11.4.删除salary表的部分数据，然后使用mysqlimport命令及--replace功能恢复salary表，其中salary表的数据备份文件使用实验4.1中的文件
+
+
+
+①首先删除两条数据
+
+![image-20201218222233191](E:\学习专用\数据库综合实验\资料整理\images\image-20201218222233191.png)
+
+②从备份的salary.csv中恢复数据：
+
+```sql
+mysqlimport -h 121.4.41.89 -P 3307 -u root -p --default-character-set=utf8  --replace  dbms salary.csv;
+```
+
+![image-20201218230050713](E:\学习专用\数据库综合实验\资料整理\images\image-20201218230050713.png)
+
+![image-20201218230022613](E:\学习专用\数据库综合实验\资料整理\images\image-20201218230022613.png)
+
+这样数据就完整地从全备份数据库dbms.sql中提取出来最终恢复到MySQL数据库了。
+
+**ps：**在进行导入导出文件是需要设置默认编码，为了防止乱码
+
+## 12.自主存取控制实验
+
+### 12.1MySQL的权限
+
+> 用户连接到MySQL，可以做各种查询，这都是MySQL用户与权限功能在背后维持着操作。
+
+用户与数据库服务器交互数据，分为两个阶段：
+
+（1）你有没有权连接上来
+（2）你有没有权执行本操作
+
+#### 12.1.1你有没有权连接上来
+
+服务器如何判断用户有没有权连接上来？
+
+依据：
+
+1）你从哪里来？host
+2）你是谁？user
+3）你的密码是多少？password
+
+用户的这三个信息，存储在mysql库中的user表中。
+
+修改host域，使IP可以连接
+
+```
+mysql>``update` `user` `set` `host=``'192.168.137.123'` `where` `user` `= ``'root'``;``mysql>flush ``privileges``; ``--冲刷权限
+```
+
+修改用户密码
+
+```
+mysql>``update` `user` `set` `password``=``password``(``'11111111'``) ``where` `xxx;``mysql>flush ``privileges``; ``--冲刷权限
+```
+
+#### 12.1.2你有没有权执行本操作
+
+> 在mysql中，有一个库是mysql库，在这个库中有三个表，一个是user表，user表中存储了所有用户的权限信息。一个是db表，db表存储的是所有用户在数据库层的权限信息。一个是tables_priv表，tables_priv表存储的是所有用户在表层的权限信息。
+
+用户登录，user表首先能限制用户登录，其次还保存了该用户的全局权限，如果该用户没有任何权限，那么将从db表中查找该用户是否有某个数据库的操作权限，如果都没有，将从table_priv表中查找该用户是否有某个表的操作权限，如果有，则该用户可以按照已有的权限来操作该表。
+
+### 12.2创建MySQL的用户
+
+**命令:**
+
+```
+CREATE USER 'username'@'host' IDENTIFIED BY 'password';
+```
+
+说明：
+
+> username：你将创建的用户名.
+>
+> host：指定该用户在哪个主机上可以登陆，如果是本地用户可用localhost，如果想让该用户可以从任意远程主机登陆，可以使用通配符%代替host。
+>
+> password：该用户的登陆密码，密码可以为空，如果为空则该用户可以不需要密码登陆服务器。
+
+
+
+**关于创建用户时提示“Operation CREATE USER failed for   XXX”的解决办法**：
+
+![image-20201219185206053](E:\学习专用\数据库综合实验\资料整理\images\image-20201219185206053.png)
+
+出现该原因的结果有可能是你使用了 
+
+```
+delete  from  mysql.user  where user ='user_1';
+```
+
+的语句删除用户，即使你刷新了 flush  privileges；也没用。
+
+删除用户需要使用  
+
+```
+drop user   用户
+```
+
+![image-20201219185517676](E:\学习专用\数据库综合实验\资料整理\images\image-20201219185517676.png)
+
+然后重新进行创建就好了：
+
+```
+create user 'user_1'@'%' identified by '123456';
+```
+
+![image-20201219185556427](E:\学习专用\数据库综合实验\资料整理\images\image-20201219185556427.png)
+
+### 12.3用户授权
+
+![image-20201219111003565](E:\学习专用\数据库综合实验\资料整理\images\image-20201219111003565.png)
+
+#### 12.3.1授权命令格式
+
+```sql
+GRANT privileges ON databasename.tablename TO 'username'@'host';
+```
+
+> privileges：用户的操作权限，如SELECT，INSERT，UPDATE等，如果要授予所的权限则使用ALL;
+>
+> databasename：数据库名;
+>
+> tablename：表名，如果要授予该用户对所有数据库和表的相应操作权限则可用*表示，如*.*;
+
+例子:
+
+```sql
+GRANT SELECT, INSERT ON test.user TO 'user_1'@'%';
+GRANT ALL ON *.* TO 'user_1'@'%';
+GRANT ALL ON maindataplus.* TO 'user_1'@'%';
+```
+
+**注意:**
+
+用以上命令授权的用户不能给其它用户授权，如果想让该用户可以授权，用以下命令:
+
+```sql
+GRANT privileges ON databasename.tablename TO 'username'@'host' WITH GRANT OPTION;
+```
+
+#### 12.3.2使用REVOKE命令可以回收授予的权限，语法格式如下：
+
+```
+REVOKE priv_type ON {表名|数据库名} FROM 用户;
+```
+
+**注：只有拥有当前数据库全局CREATE或者UPDATE权限的用户才能使用REVOKE命令。**
+
+#### 12.3.3全局授权和收回
+
+全局授权格式（使用通配符*）：
+
+```sql
+grant` `[权限1,权限2,权限3] ``on` `*.* ``to` `user``@``'host'` `identified ``by` `'password'
+```
+
+常用权限：all、create、drop、select、insert、delete、update
+
+授权：
+
+创建lisi用户，host为192.168.191.%，%通配符表示192.168.191.xxx结尾的主机都可以连接，密码为12345678。
+
+```sql
+grant` `all` `on` `*.* ``to` `lisi@``'192.168.191.%'` `identified ``by` `'12345678'``;
+```
+
+收回权限：
+
+```sql
+revoke` `all` `on` `*.* ``from` `lisi@``'192.168.191.%'``;
+```
+
+#### 12.3.4数据库级授权和收回
+
+> 需求：让lisi用户拥有mysqlmaster数据库的所有操作权限
+
+授权：
+
+```
+grant` `all` `on` `mysqlmaster.* ``to` `lisi@``'192.168.191.%'` `identified ``by` `'12345678'``;
+```
+
+收回：
+
+```
+revoke` `all` `on` `mysqlmaster.* ``from` `lisi@``'192.168.191.%'``;
+```
+
+#### 12.3.5表级授权和收回
+
+> 需求：让lisi用户具有mysqlmaster数据库下的goods表的insert、update、select三个操作的权限。
+
+授权：
+
+```
+grant` `insert``,``update``,``select` `on` `mysqlmaster.goods ``to` `lisi@``'192.168.191.%'` `identified ``by` `'12345678'``;
+```
+
+收回：
+
+```
+revoke` `insert``,``update``,``select` `on` `mysqlmaster.goods ``from` `lisi@``'192.168.191.%'``;
+```
+
+### 12.4更新用户语法格式如下：
+
+#### 12.4.1如果是修改当前登录用户密码语法：
+
+```
+SET PASSWORD FOR 用户=PASSWORD(‘新密码’);
+```
+
+#### 12.4.2通过修改mysql数据库下的user表中的来修改（不可取）
+
+命令和update普通表一样，语法格式如下：
+
+```
+UPDATE MYSQL.USER SET 属性名= 新属性值  WHERE  条件;
+```
+
+比如，修改User的用户名为“user_1”将其用户名改为“user_3”,密码改为“1234”。
+
+> **注意：MySQL8之前修改密码是 set password= password("新密码");而MySQL8是 set authentication_string = "新密码".也就是MySQL8的密码字段为authentication_string 。**
+
+```
+update mysql.user set user ="user_3" ,authentication_string ="1234" where user ="user_1";
+```
+
+![image-20201219192328977](E:\学习专用\数据库综合实验\资料整理\images\image-20201219192328977.png)
+
+可以发现如果直接使用 set authentication_string ='新密码',那么该密码直接被填充到用户中而没有经过加密。而我们知道，MySQL的密码是经过加密的，因此这样子使用update修改密码是有问题的，在你登录时候虽然用户名和密码都正确，但是却没法进行登录，会提示“ Access denied for user 'user_3'@'117.154.88.249' (using password: YES)”。
+
+​	MySQL8.0后请使用alter修改用户密码，因为在MySQL8.0以后的加密方式为caching_sha2_password，如果使用update修改密码会给user表中root用户的authentication_string字段下设置newpassowrd值，当再使用alter user 'root'@'localhost' identified by 'newpassword'修改密码时会一直报错，**必须清空后再修改**（如果不首先清空这个authentication_string，在使用alter user  进行修改时会发生“Operation ALTER USER failed for  XXX”的提示）
+
+![image-20201219194453549](E:\学习专用\数据库综合实验\资料整理\images\image-20201219194453549.png)
+
+**因为authentication_string字段下只能是MySQL加密后的43位字符串密码，其他的会报格式错误，所以在MySQL8.0以后能修改密码的方法只能是使用alter来修改：**
+
+```
+ALTER USER   用户   IDENTIFIED  WITH mysql_native_password BY '新密码';
+#或者是
+ALTER USER 用户 IDENTIFIED BY ‘新密码’;
+```
+
+![image-20201219194554533](E:\学习专用\数据库综合实验\资料整理\images\image-20201219194554533.png)
+
+比如：将用户 ‘user_1’@‘%’ 的密码改为“1234”
+
+```sql
+ALTER USER ‘user_1’@‘%’ IDENTIFIED BY ‘1234’;
+#或者
+ALTER USER   ‘user_1’@‘%’    IDENTIFIED  WITH mysql_native_password BY '1234';
+```
+
+最后刷新一定要刷新下
+
+```sql
+flush privileges;
+```
+
+### 12.5查询某个用户权限
+
+```
+show grants for  用户;
+```
+
+比如：
+
+```
+show grants for 'user_1'@'%';
+```
+
+![image-20201219140946410](E:\学习专用\数据库综合实验\资料整理\images\image-20201219140946410.png)
+
+### 12.6删除用户
+
+#### 12.6.1使用drop命令
+
+```
+drop user 用户;
+```
+
+比如：
+
+```
+drop user  'user_1'@'%';
+```
+
+![image-20201219185112596](E:\学习专用\数据库综合实验\资料整理\images\image-20201219185112596.png)
+
+删除的是 用户 'user_1'@'%'。
+
+#### 12.6.2使用delete命令
+
+```sql
+delete from  mysql.user  where  条件
+```
+
+ 比如：
+
+```
+delete from  mysql.user where user='user_1' and host ='%';
+```
+
+删除的是 用户 'user_1'@'%'。
+
+#### 12.6.3使用drop和delete命令的区别
+
+##### 12.6.3.1drop user 用户名;
+
+删除已经存在的用户，例如要删除‘user_1’这个用户，(drop user 'user_1';)默认删除的是user_1@”%”这个用户，如果还有其他用户，例如user_1@”localhost”,user_1@”ip”,则不会一起被删除。如果只存在一个用户'user_1'@”localhost”,使用语句（drop user 'user_1';）会报错，应该用（drop user 'user_1'@”localhost”;）如果不能确定（用户名@机器名）中的机器名，可以在mysql中的user表中进行查找，user列对应的是用户名，host列对应的是机器名。
+
+##### 12.6.3.5 delete from user where user=”用户名” and host=”localhost”;
+
+delete也是删除用户的方法，例如要删除'user_1'@”localhost”用户，则可以
+
+```sql
+delete from user where user=”user_1” and host=”localhost”;
+```
+
+**drop删除掉的用户不仅将user表中的数据删除，还会删除诸如db和其他权限表的内容。而（delete from mysql.user）只是删除了mysql数据库中user表的内容，其他表不会被删除，后期如果命名一个和已删除用户相同的名字，权限就会被继承。**
+
+### 12.7测试用例
+
+##### 12.7.1.创建用户user_1和user_2，密码都为123456
+
+```sql
+ create user 'user_1'@'%' identified by "123456";
+create user 'user_2'@'%' identified by "123456";
+```
+
+![img](E:\学习专用\数据库综合实验\资料整理\images\wps7.jpg) 
+
+![img](E:\学习专用\数据库综合实验\资料整理\images\wps8.jpg) 
+
+##### 12.7.2.将用户user_2的名称修改为user_3，并将其密码修改为1234
+
+![image-20201219223648097](E:\学习专用\数据库综合实验\资料整理\images\image-20201219223648097.png)
+
+首先使用update mysql.user语句来更新user_2中的用户名
+
+```sql
+update  mysql.user set user ='user_3' where  user ='user_2' and host='%';
+```
+
+
+![img](E:\学习专用\数据库综合实验\资料整理\images\wps9.jpg)
+
+然后使用alter命令修改密码：
+
+```mysql
+alter user 'user_3'@'%' identified with mysql_native_password by '1234';
+```
+
+![image-20201219225202606](E:\学习专用\数据库综合实验\资料整理\images\image-20201219225202606.png)
+
+##### 12.7.3.以user_1身份登陆数据库
+
+![image-20201219225740145](E:\学习专用\数据库综合实验\资料整理\images\image-20201219225740145.png)
+
+从可以发现可以远程登录了。
+
+##### 12.7.4.授予用户user_1对DBEM数据库中employee表的查询、插入、修改、删除等权限。
+
+![img](E:\学习专用\数据库综合实验\资料整理\images\wps11.jpg)
+这时候user_1就有了对Employee表的增删查改功能了。
+![img](E:\学习专用\数据库综合实验\资料整理\images\wps12.jpg)
+可以发现，user1只能访问dbms中的employee表的数据，并能进行增删查改功能。
+
+ 
+
+##### 12.7.5.授予用户user_1对salary表的查询权限，并允许其将权限授予其他用户，然后用user_1登陆数据库并将salary表的查询权限授予user_3。
+
+首先给与user_1对salary表的查询权限：
+
+![img](E:\学习专用\数据库综合实验\资料整理\images\wps13.jpg) 
+
+然后将对salary表的查询权限给user_3:
+
+![img](E:\学习专用\数据库综合实验\资料整理\images\wps14.jpg) 
+
+![img](E:\学习专用\数据库综合实验\资料整理\images\wps15.jpg) 
+
+![img](E:\学习专用\数据库综合实验\资料整理\images\wps16.jpg)
+
+
+
+##### 12.7.7.回收user_1的employee表上的select权
+
+
+![img](E:\学习专用\数据库综合实验\资料整理\images\wps17.jpg)
+
+ 可以发现，user_1上的表的select权限已经被收回了。
+
+## 13.并发控制实验
+
+### 13.1并发的定义
+
+> 并发即指在同一时刻，多个操作并行执行。MySQL对并发的处理主要应用了两种机制——是"锁"和"多版本控制"。
+
+### 13.2并发控制
+
+​	MySQL提供两个级别的并发控制：服务器级(the server level)和存储引擎级(the storage engine level)。加锁是实现并发控制的基本方法，MySQL中锁的粒度：
+
+#### 13.2.1表级锁
+
+MySQL独立于存储引擎提供表锁，例如，对于ALTER TABLE语句，服务器提供表锁(table-level lock)。
+
+#### 13.2.2行级锁
+
+InnoDB和Falcon存储引擎提供行级锁，此外，BDB支持页级锁。
+
+#### 13.2.3其它
+
+​	另外，值得一提的是，MySQL的一些存储引擎（如InnoDB、BDB）除了使用封锁机制外，还同时结合MVCC机制，即多版本并发控制(Multi-Version Concurrent Control)，来实现事务的并发控制，从而使得只读事务不用等待锁，提高了事务的并发性。
+
+### 13.3锁的分类
+
+#### 13.3.1共享锁
+
+也称为读锁，读锁允许多个连接可以同一时刻并发的读取同一资源,互不干扰；
+
+#### 13.3.2排他锁
+
+也称为写锁，一个写锁会阻塞其他的写锁或读锁，保证同一时刻只有一个连接可以写入数据，同时防止其他用户对这个数据的读写。
+
+#### 13.4事务处理
+
+#### 13.4.1事务的ACID特性
+
+数据库的事务处理的原则是保证ACID的正确性。事务是由一组SQL语句组成的逻辑处理单元，事务具有以下4个属性：
+
+(1) 原子性（Atomicity）：事务是一个原子操作单元，其对数据的修改，要么全都执行，要么全都不执行，不可能只执行其中的一部分。（不可分割）
+
+(2) 一致性（Consistent）：在事务开始和完成时，数据都必须保持一致状态。这意味着所有相关的数据规则都必须应用于事务的修改，以保持数据的完整性；事务结束时，所有的内部数据结构(如B树索引或双向链表)也都必须是正确的。（状态更改一致性）
+
+(3) 隔离性（Isolation）：数据库系统提供一定的隔离机制，保证事务在不受外部并发操作影响的“独立”环境执行。这意味着事务处理过程中的中间状态对外部是不可见的。（执行过程隔离不可见）
+
+(4) 持久性（Durable）：事务完成之后，它对于数据的修改是永久性的，即使出现系统故障也能够保持。（持久生效）
+
+### 13.5 事务处理带来的问题
+
+​	由于事务的并发执行，带来以下一些著名的问题：
+
+#### 13.5.1更新丢失（Lost Update）
+
+​	当两个或多个事务选择同一行，然后基于最初选定的值更新该行时，由于每个事务都不知道其他事务的存在，就会发生丢失更新问题－－最后的更新覆盖了由其他事务所做的更新。
+
+#### 13.5.2脏读（Dirty Reads）
+
+​	一个事务正在对一条记录做修改，在这个事务完成并提交前，这条记录的数据就处于不一致状态；这时，另一个事务也来读取同一条记录，如果不加控制，第二个事务读取了这些"脏"数据，并据此做进一步的处理，就会产生未提交的数据依赖关系。这种现象被形象地叫做"脏读"。
+
+#### 13.5.2不可重复读（Non-Repeatable Reads）
+
+​	一个事务在读取某些数据后的某个时间，再次读取以前读过的数据，却发现其读出的数据已经发生了改变、或某些记录已经被删除了！这种现象就叫做"不可重复读"。
+
+#### 13.5.3 幻读（Phantom Reads）。
+
+​	一个事务按相同的查询条件重新读取以前检索过的数据，却发现其他事务插入了满足其查询条件的新数据，这种现象就称为"幻读"。
+
+### 13.6Mysql隔离级别
+
+READ UNCOMMITTED ：事务可以看到其他事务没有被提交的数据（脏数据）。
+READ COMMITTED ：事务可以看到其他事务已经提交的数据。
+REPEATABLE READ ：保证事务中多次查询的结果相同（Innodb默认级别），会出现幻读。
+SERIALIZABLE ：所有事务顺序执行，对所有read操作加锁。保证一致性。
+
+![img](https://img2018.cnblogs.com/blog/1279026/201810/1279026-20181013152937250-755169707.png)
+
+ 
+
+```mysql
+#查看mysql隔离级别
+Show variables  like 'tx_isolation';
+#读未提交
+set global transaction isolation level read  uncommitted;
+#读已提交
+set global transaction isolation level read  committed;
+#可重复读
+set global transaction isolation level repeatable read;
+#可串行化
+set global transaction isolation level serializable;
+```
+
+
+
+### 13.7多版本并发控制 
+
+​	MVCC的实现：通过保存数据资源在不同时间点的快照实现的。根据事务开始的时间不同，每个事务看到的数据快照版本是不一样的。
+
+​	InnoDB中的MVCC实现：通过在每行记录后面保存两个隐藏的列来实现，一个保存了行的创建时间，一个保存了行的过期时间。
+
+#### 13.7.1SELECT
+
+当读取记录时，存储引擎会选取满足下面两个条件的行作为读取结果。
+
+读取记录行的开始版本号必须早于当前事务的版本号。也就是说，在当前事务开始之前，这条记录已经存在。在事务开始之后才插入的行，事务不会看到。
+
+读取记录行的过期版本号必须晚于当前事务的版本号。也就是说，当前事务开始的时候，这条记录还没有过期。在事务开始之前就已经过期的数据行，该事务也不会看到。
+
+#### 13.7.2INSERT
+
+存储引擎为新插入的每一行保存当前的系统版本号作为这一行的开始版本号。
+
+#### 13.7.3UPDATE
+
+存储引擎会新插入一行记录，当前的系统版本号就是新记录行的开始版本号。同时会将原来行的过期版本号设为当前的系统版本号。
+
+#### 13.7.4DELETE
+
+存储引擎将删除的记录行的过期版本号设置为当前的系统版本号。
+
+MVCC只在 REPEATABLE READ 和 READ COMMITTED 两个隔离级别下工作。
