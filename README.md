@@ -16,7 +16,7 @@ CREATE  DATABASE [IF NOT EXISTS] 数据库名 [选项...];
 
  create database if not exists DBMS character set gbk;
 
-![img](images\1.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/1.jpg) 
 
 这里使用了if not exists 这个条件，意思是如果不存在该数据库则创建，如果已经存在了则不创建。
 
@@ -24,7 +24,7 @@ CREATE  DATABASE [IF NOT EXISTS] 数据库名 [选项...];
 
 则会报错：
 
-![img](images\2.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/2.jpg) 
 
 ### 1.2.修改数据库信息：
 
@@ -36,7 +36,7 @@ CREATE  DATABASE [IF NOT EXISTS] 数据库名 [选项...];
   alter database DBMS character set utf8mb4;
 ```
 
-![img](images\3.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/3.jpg) 
 
 使用查看数据库信息命令查看当前数据库DBMS的信息：
 
@@ -44,7 +44,7 @@ CREATE  DATABASE [IF NOT EXISTS] 数据库名 [选项...];
  show create database dbms;
 ```
 
-![img](images\4.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/4.jpg) 
 
  
 
@@ -52,7 +52,7 @@ CREATE  DATABASE [IF NOT EXISTS] 数据库名 [选项...];
 
  
 
-![img](images\5.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/5.jpg) 
 
  
 
@@ -64,13 +64,13 @@ CREATE  DATABASE [IF NOT EXISTS] 数据库名 [选项...];
 
 #### 1.3.1建表语句：drop database if  exists tempDBMS;
 
-![img](images\6.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/6.jpg) 
 
 #### 1.3.2删除数据库：drop database 数据库名
 
  drop database  tempDBMS;
 
-![img](images\7.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/7.jpg) 
 
  
 
@@ -84,7 +84,7 @@ CREATE  DATABASE [IF NOT EXISTS] 数据库名 [选项...];
 CREATE TABLE employee (employeeID CHAR(6) NOT NULL PRIMARY KEY, name CHAR(10) NOT NULL, education CHAR(4) NOT NULL,birth DATE NOT NULL, gender TINYINT(1) NOT NULL DEFAULT 1,workYear TINYINT(1),address VARCHAR(100),phone CHAR(12), departmentID CHAR(3) REFERENCES department(departmentID));
 ```
 
-![img](images\8.jpg) 
+![image-20210203233628812](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20210203233628812.png)
 
 #### 1.4.2从已有数据中新建：
 
@@ -92,9 +92,9 @@ CREATE TABLE employee (employeeID CHAR(6) NOT NULL PRIMARY KEY, name CHAR(10) NO
 CREATE  TABLE [IF NOT EXISTS] 表名  [ ( ) LIKE 已有表名 [ ] ] | [AS ( 表达式 )];
 ```
 
-#### ![img](images\9.jpg)
+#### ![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/9.jpg)
 
-![img](images\10.jpg)
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/10.jpg)
 
 
 
@@ -106,7 +106,7 @@ CREATE  TABLE [IF NOT EXISTS] 表名  [ ( ) LIKE 已有表名 [ ] ] | [AS ( 表�
 create table if not exists person (id int(8) primary key auto_increment,name varchar(20) not null,password varchar(20) not null,sex tinyint(1) not null,address varchar(128));
 ```
 
-![img](images\11.jpg)
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/11.jpg)
 
 ### 1.5.2修改表名： 
 
@@ -116,7 +116,7 @@ rename table  表名  to  新的表名
 
  修改表person的名为newperson： 
 
-![img](images\12.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/12.jpg) 
 
 ### 1.5.2删除列：
 
@@ -126,7 +126,7 @@ alter table table-name drop col-name;
 
  alter table newperson drop sex ;
 
-![img](images\13.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/13.jpg) 
 
 可见删除列“sex”成功。
 
@@ -138,7 +138,7 @@ alter table table-name drop col-name;
 alter table table-name add col-name col-type comment 'xxx';
 ```
 
-![img](images\14.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/14.jpg) 
 
  
 
@@ -150,7 +150,7 @@ alter table table-name add col-name col-type COMMENT 'sss' FIRST;
 
 alter table newperson add column age int(3) comment "年龄" first;
 
-![img](images\15.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/15.jpg) 
 
  
 
@@ -166,7 +166,7 @@ alter table table-name add col-name col-type after col-name-1;
  alter table newperson add column jobName varchar(20) comment "工作名称" after id;
 ```
 
-![img](images\26.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/26.jpg) 
 
  
 
@@ -182,7 +182,7 @@ alter table table-name  modify  column col-name col-type;
  alter table newperson modify name varchar(40) not null;
 ```
 
-![img](images\17.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/17.jpg) 
 
 #### 1.5.7使用CHANGE修改字段类型：
 
@@ -196,7 +196,7 @@ alter table table-name change col-name col-name col-type;
  alter table newperson change address newAddress varchar(64) not null;
 ```
 
-![img](images\18.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/18.jpg) 
 
  
 
@@ -210,7 +210,7 @@ alter table table-name alter col-name set default 要设置的默认值;
  alter table newperson alter age set default 18;
 ```
 
-![img](images\19.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/19.jpg) 
 
 #### 1.5.9字段删除默认值：
 
@@ -222,7 +222,7 @@ alter table table-name alter col-name drop default;
 alter table newperson alter age drop default;
 ```
 
-![img](images\20.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/20.jpg) 
 
 ###  1.6.删除临时表：
 
@@ -232,7 +232,7 @@ drop table 表名 [if exists]
 ```
 
 
-![img](images\21.jpg)
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/21.jpg)
 
 ###  1.7思考与练习
 
@@ -244,9 +244,9 @@ CREATE  TABLE employee2 LIKE employee ;和CREATE  TABLE employee3 AS (SELECT * F
 
 CREATE  TABLE employee2 LIKE employee ;创建表时复制的是employee 的表结构，但是并没有复制employee 中的数据到employee2中，查询数据时为空。
 
-![img](images\22.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/22.jpg) 
 
-![img](images\23.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/23.jpg) 
 
 CREATE  TABLE employee3 AS (SELECT * FROM employee );创建表时不仅把employee 的结构复制过来了，其中的数据也复制过来了，employee3 和employee3的数据一致。
 
@@ -260,7 +260,7 @@ CREATE  TABLE employee3 AS (SELECT * FROM employee );创建表时不仅把employ
 create table if not exists test ( id int(8) primary key auto_increment,name varchar(20) not null,price float,gender tinyint(1) default 0,age int(3),birth date );
 ```
 
-![img](images\24.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/24.jpg) 
 
 #### 2.1.2向test表中插入数据
 
@@ -279,7 +279,7 @@ VALUES (值1) [… , (值n) ];
 
 **VALUES 或 VALUE 子句：该子句包含要插入的数据清单。数据清单中数据的顺序要和列的顺序相对应。**
 
-![img](images\25.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/25.jpg) 
 
 #### 2.1.3从已有数据中插入：
 
@@ -289,9 +289,9 @@ VALUES (值1) [… , (值n) ];
 
 INSERT INTO…SELECT…FROM 语句用于快速地从一个或多个表中取出数据，并将这些数据作为行数据插入另一个表中。SELECT 子句返回的是一个查询到的结果集，INSERT 语句将这个结果集插入指定表中，结果集中的每行数据的字段数、字段的数据类型都必须与被操作的表完全一致。
 
-![img](images\27.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/27.jpg) 
 
-![img](images\28.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/28.jpg) 
 
 #### 2.1.4更新test的内容
 
@@ -300,13 +300,13 @@ UPDATE <表名> SET 字段 1=值 1 [,字段 2=值 2… ] [WHERE 子句 ]
 [ORDER BY 子句] [LIMIT 子句]
 ```
 
-![img](images\29.jpg)
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/29.jpg)
 
-![img](images\30.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/30.jpg) 
 
-![img](images\31.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/31.jpg) 
 
-![img](images\32.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/32.jpg) 
 
 #### 2.1.5删除数据
 
@@ -330,11 +330,11 @@ DELETE FROM <表名> [WHERE 子句] [ORDER BY 子句] [LIMIT 子句]
 
  
 
-![img](images\33.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/33.jpg) 
 
-![img](images\34.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/34.jpg) 
 
-![img](images\35.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/35.jpg) 
 
 ##  3 数据查询实验
 
@@ -358,45 +358,45 @@ SELECT [ALL | DISTINCT | DISTINCTROW ][HIGH_PRIORITY]…
 
 #### 3.1.2查询所有employee的数据
 
-![img](images\36.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/36.jpg) 
 
 #### 3.1.3通过where条件查询
 
-![img](images\37.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/37.jpg) 
 
-![img](images\38.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/38.jpg) 
 
 #### 3.1.4通过where多条件查询
 
-![img](images\39.jpg)![img](E:\学习专用\数据库综合实验\images\wps39.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/39.jpg)
 
-![img](images\40.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/40.jpg) 
 
 #### 3.1.5聚合函数
 
-![img](images\41.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/41.jpg) 
 
 ##### 3.1.5.1统计所有行数
 
-![img](images\42.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/42.jpg) 
 
-![img](images\43.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/43.jpg) 
 
 ##### 3.1.5.2查找所有员工中工作时间最长的年数：
 
-![img](images\44.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/44.jpg) 
 
 ##### 3.1.5.3查找所有员工中工作时间最短的年数：
 
-![img](images\wps45.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps45.jpg) 
 
 ##### 3.1.5.4统计所有员工工作年长总和
 
-![img](images\wps46.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps46.jpg) 
 
 ###### 1.3.1.5.5统计员工的平均工作年长
 
-![img](images\wps47.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps47.jpg) 
 
 #### 3.1.6分组统计查询
 
@@ -410,7 +410,7 @@ GROUP BY  <字段名>
 
 ##### 3.1.6.1按照workYear分组查询
 
-![img](images\wps48.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps48.jpg) 
 
 GROUP BY单独使用 GROUP BY 关键字时，查询结果会只显示每个分组的第一条记录。
 
@@ -418,11 +418,11 @@ GROUP BY单独使用 GROUP BY 关键字时，查询结果会只显示每个分�
 
 ##### 3.1.6.2按照workYear分组并统计每组的记录数
 
-![img](images\wps49.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps49.jpg) 
 
 ##### 3.1.6.3GROUP BY 关键字可以和 GROUP_CONCAT() 函数一起使用。GROUP_CONCAT() 函数会把每个分组的字段值都显示出来。
 
-![img](images\wps50.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps50.jpg) 
 
 #### 3.1.7ORDER BY 关键字主要用来将查询结果中的数据按照一定的顺序进行排序。
 
@@ -451,17 +451,17 @@ ORDER BY 指定多个字段进行排序时，MySQL 会按照字段的顺序从�
 
 ##### 3.1.7.1单个字段通过workYear升序排序
 
-![img](images\wps51.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps51.jpg) 
 
 ##### 3.1.7.2单个字段通过workYear降序排序
 
  
 
-![img](images\wps52.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps52.jpg) 
 
 ##### 3.1.7.3首先通过workYear升序排序，然后通过departmentID升序
 
-![img](images\wps53.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps53.jpg) 
 
 ##### 3.1.7.4LIMIT 是 MySQL 中的一个特殊关键字，用于指定查询结果从哪条记录开始显示，一共显示多少条记录。
 
@@ -479,17 +479,17 @@ LIMIT 初始位置，记录数
 
  
 
-![img](images\wps54.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps54.jpg) 
 
 显示查询数据中的前5条数据
 
-![img](images\wps55.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps55.jpg) 
 
 从第3个位置开始显示5条数据
 
  
 
-![img](images\wps56.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps56.jpg) 
 
 从第3个位置开始显示5条数据
 
@@ -501,11 +501,11 @@ LIMIT 初始位置，记录数
 
 #### 3.2.1全连接查询 employee和department
 
-![img](images\wps57.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps57.jpg) 
 
 #### 3.2.2全连接条件查询
 
-![img](images\wps58.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps58.jpg) 
 
  
 
@@ -533,49 +533,49 @@ INNER JOIN 也可以使用 WHERE 子句指定连接条件，但是 INNER JOIN ..
 
 ##### 3.2.3.1使用 inner join 
 
-![img](images\wps59.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps59.jpg) 
 
  
 
 ##### 3.2.3.3使用inner join on 查询
 
-![img](images\wps60.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps60.jpg) 
 
  
 
 #### 3.2.4查询每个雇员的情况及其薪水情况
 
-![img](images\wps61.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps61.jpg) 
 
  
 
 #### 3.2.5使用内连接查询名字为“刘明”的员工所在部门
 
-![img](images\wps62.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps62.jpg) 
 
 #### 3.2.6查找财务部收入在2000元以上的雇员姓名和薪水详情
 
-![img](images\wps63.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps63.jpg) 
 
  
 
 #### 3.2.7查询财务部雇员的最高和最低实际收入
 
-![img](images\wps64.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps64.jpg) 
 
 #### 3.2.8查询employee中男性和女性的人数
 
-![img](images\wps65.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps65.jpg) 
 
 #### 3.2.9查找员工数超过2人的部门名称和员工数量
 
-![img](images\wps66.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps66.jpg) 
 
  
 
 #### 3.2.10将employee表中的员工号码由大到小排列
 
-![img](images\wps67.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps67.jpg) 
 
 ## 4.视图实验
 
@@ -729,7 +729,7 @@ create view v_dp as select  from department with check option;
 
  
 
-![img](images\wps71.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps71.jpg) 
 
  
 
@@ -741,7 +741,7 @@ create view v_dp as select  from department with check option;
 create view v_em(employeeID,name,realIncome) as select employee.employeeID,employee.name,(salary.income - salary.outcome ) as realIncome from  employee  join  salary on employee.employeeID = salary.employeeID;
 ```
 
-![img](images\wps72.jpg)
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps72.jpg)
 
 #### 4.7.3从v_em视图中查询姓名为“李丽”的员工的实际收入
 
@@ -750,7 +750,7 @@ create view v_em(employeeID,name,realIncome) as select employee.employeeID,emplo
 ```
 
 
-![img](images\wps73.jpg)
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps73.jpg)
 
 #### 4.7.4.向v_dp视图中插入一行数据：6，广告部，推广产品。执行完之后分别查看视图v_dp和表department中发生的变化。
 
@@ -758,7 +758,7 @@ create view v_em(employeeID,name,realIncome) as select employee.employeeID,emplo
 insert into v_dp(departmentID,departName,comment) values(6,"广告部","推广产品");
 ```
 
-![img](images\wps74.jpg)
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps74.jpg)
 
 可以发现，当在视图v_dp中插入一条数据时，department中也插入了一条数据。
 
@@ -770,7 +770,7 @@ insert into v_em("100020","赵柳",8000);
 
 ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '"100020","赵柳",8000)' at line 1
 
-![img](images\wps75.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps75.jpg) 
 
 插入数据时发生了错误。
 
@@ -781,7 +781,7 @@ update v_em set name = "赵柳" where employeeID = "102208";
 ```
 
 
-![img](images\wps76.jpg)
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps76.jpg)
 
 #### 4.7.7删除视图v_dp中部门号为“2”的数据
 
@@ -789,9 +789,9 @@ update v_em set name = "赵柳" where employeeID = "102208";
 delete from v_dp where departmentID = 2;
 ```
 
-![img](images\wps77.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps77.jpg) 
 
-![img](images\wps78.jpg)
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps78.jpg)
 
 ## 5.索引实验
 
@@ -866,7 +866,7 @@ create index in_hash using hash on tmpEmployee(employeeId);
 
  
 
-![img](images\wps104.jpg)
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps104.jpg)
 
 #### 5.5.3R-TREE索引
 
@@ -919,9 +919,9 @@ CREATE INDEX in_employee ON student( name asc);  #升序索引
 show index from employee;
 ```
 
-![img](images\wps105.jpg)![img](images\wps106.jpg)\
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps105.jpg)![img](images\wps106.jpg)\
 
-![img](images\wps107.jpg)
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps107.jpg)
 
 #### 5.6.2使用 CREATE TABLE 语句
 
@@ -969,7 +969,7 @@ create unique index in_name on employee (name);
 
  
 
-![img](images\wps108.jpg)
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps108.jpg)
 
 
 
@@ -979,7 +979,7 @@ create unique index in_name on employee (name);
 create index in_employeeId_name on employee(employeID,name);
 ```
 
-![img](images\wps109.jpg)
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps109.jpg)
 
 ##### 5.6.2.3创建表的时候创建索引
 
@@ -1011,7 +1011,7 @@ CREATE TABLE `department1` (
 create index in_departmentId on department1(departmentID);
 ```
 
-![img](images\wps110.jpg)
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps110.jpg)
 
 
 
@@ -1101,7 +1101,7 @@ DROP INDEX <索引名> ON <表名>
 drop index in_employee on employee;
 ```
 
-![img](images\wps111.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps111.jpg) 
 
  
 
@@ -1115,7 +1115,7 @@ alter table employee drop index in_phone ;
 
 
 
-![img](images\wps112.jpg)
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps112.jpg)
 
 ### 5.9研究与思考
 
@@ -1143,7 +1143,7 @@ alter table employee drop index in_phone ;
 create table if not exists employee1(employeeID varchar(6) not null unique,name varchar(10) primary key,education varchar(10));
 ```
 
-![img](images\wps113.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps113.jpg) 
 
  
 
@@ -1159,7 +1159,7 @@ create table if not exists employee2( employeeID varchar(6) not  null,name varch
 
  
 
-![img](images\wps114.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps114.jpg) 
 
 ### 6.4.设计记录增加到employee1表和employee2表，验证实体完整性是否起作用
 
@@ -1168,14 +1168,14 @@ insert into employee1 values("100","root","本科");
 insert into employee1 values("100","root","本科");
 ```
 
-![img](images\wps1157.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps1157.jpg) 
 
 ```
 insert into employee2 values("100","root","本科");
 insert into employee2 values("100","root","本科");
 ```
 
-![img](images\wps118.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps118.jpg) 
 
  
 
@@ -1235,7 +1235,7 @@ CONSTRAINT ref_key_name FOREIGN KEY (ref_key) REFERENCES ref_table_name(ref_key)
 create table if not exists salary1(employeeID char(6) not null,income double,outcome double,foreign key(employeeID) references salary(employeeID) on delete CASCADE on update CASCADE);
 ```
 
-![img](images\wps80.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps80.jpg) 
 
  
 
@@ -1247,11 +1247,11 @@ create table if not exists salary1(employeeID char(6) not null,income double,out
 insert into salary1(employeeID,income,outcome) select employeeID,income,outcome from salary;
 ```
 
-![img](images\wps81.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps81.jpg) 
 
 ### 7.5删除salary表中的一行数据，再查看salary1表的内容，看看会发生什么情况
 
-![img](images\wps82.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps82.jpg) 
 
 从表中可以发现，从salary表中删除了employeeID =10008的记录，然后发现从表salary1中EmployeeID=10008的记录也被删除了。这是因为salary1表中参照完整性的外键为EmployeeID，其参照性键并且指定了参照性动作delete和update的级别为：CASCADE（级联）：在父表上update/delete记录时，同步update/delete掉子表的匹配记录。因此当表salary表中数据发生变化时，会同步到salary1表中。
 
@@ -1373,7 +1373,7 @@ mysql> create procedure show_employeeInfo()
 show create procedure  show_employeeInfo \G;
 ```
 
-![image-20201204152514002](images\50.png)
+![image-20201204152514002](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/50.png)
 
 ### 8.5删除存储过程：
 
@@ -1389,7 +1389,7 @@ DROP PROCEDURE [ IF EXISTS ] <过程名>
 
 **注意：**存储过程名称后面没有参数列表，也没有括号，在删除之前，必须确认该存储过程没有任何依赖关系，否则会导致其他与之关联的存储过程无法运行。
 
-![image-20201204152831123](images\51.png)
+![image-20201204152831123](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/51.png)
 
 ### 8.6修改存储过程的语法格式如下：
 
@@ -1553,15 +1553,15 @@ Query OK, 0 rows affected (0.49 sec)
 
  
 
-![img](images\wps88.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps88.jpg) 
 
 然后查看过程存储创建结构：
 
-![img](images\wps89.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps89.jpg) 
 
 最后调用存储过程函数：
 
-![img](images\wps90.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps90.jpg) 
 
  
 
@@ -1571,7 +1571,7 @@ Query OK, 0 rows affected (0.49 sec)
 DROP PROCEDURE [IF EXISTS] 存储过程名;
 ```
 
-![img](images\wps92.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps92.jpg) 
 
  
 
@@ -1581,13 +1581,13 @@ DROP PROCEDURE [IF EXISTS] 存储过程名;
  create procedure count_employee(out count_emp int)  begin set count_emp = (select count(*) from employee) ;  end $$ 
 ```
 
-![img](images\wps94.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps94.jpg) 
 
-![img](images\wps95.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps95.jpg) 
 
 调用并查询结果：
 
-![img](images\wps96.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps96.jpg) 
 
 #### 8.10.4.创建一个存储过程，比较两个员工的实际收入，若前者比后者高就输出0，否则输出1，员工用其员工编号识别。
 
@@ -1599,7 +1599,7 @@ Delimiter $$;
 
 这时出现报错：
 
-![img](images\wps97.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps97.jpg) 
 
  
 
@@ -1613,13 +1613,13 @@ Delimiter $$;
 在MySQL中创建函数时出现这种错误的解决方法：
 set global log_bin_trust_function_creators=TRUE;
 
-![img](images\wps98.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps98.jpg) 
 
 问题解决。
 
 然后开始调用函数：
 
-![img](images\wps99.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps99.jpg) 
 
 成功实现需要的功能。
 
@@ -1761,11 +1761,11 @@ delimiter $$
 delimiter ;
 ```
 
-![img](images\wps83.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps83.jpg) 
 
-![img](images\wps84.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps84.jpg) 
 
-![img](images\wps85.jpg)可见当删除Employee中ID为“102201”的员工时，在salary表中的对应数据也会被删除。
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps85.jpg)可见当删除Employee中ID为“102201”的员工时，在salary表中的对应数据也会被删除。
 
  
 
@@ -1780,9 +1780,9 @@ create trigger update_salary_income after update on employee for each row begin 
 delimiter ;
 ```
 
-![img](images\wps86.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps86.jpg) 
 
-![img](images\wps87.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps87.jpg) 
 
 可见，当Employee中EmployeeID = 102208的workYear + 2时，对应的salary增加了1000.说明触发器是起了作用了。
 
@@ -1826,7 +1826,7 @@ Mysql 导入文件提示 --secure-file-priv option 问题
  show variables like "%secure%"
 ```
 
-![image-20201218143048655](E:\学习专用\数据库综合实验\资料整理\images\image-20201218143048655.png)
+![image-20201218143048655](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201218143048655.png)
 
 （1）NULL，表示禁止。
 
@@ -1874,7 +1874,7 @@ secure_file_priv =
 vim  etc/mysql/my.cnf 
 ```
 
-![image-20201218144008566](E:\学习专用\数据库综合实验\资料整理\images\image-20201218144008566.png)
+![image-20201218144008566](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201218144008566.png)
 
 
 
@@ -1966,7 +1966,7 @@ mysqldump -h localhost -P 3306 -uroot -p dbms employee salary department > /mysq
 mysqldump -h localhost -P 3306  -uroot -p dbms --ignore-table=dbms.employee  > /mysql/data/dbms/back/salary-dep.db
 ```
 
-![image-20201218164139527](E:\学习专用\数据库综合实验\资料整理\images\image-20201218164139527.png)
+![image-20201218164139527](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201218164139527.png)
 
 #### 10.2.4还原命令
 
@@ -2156,11 +2156,11 @@ select employeeID,name,education from employee into outfile "employee.csv" chara
 
 ```
 
-![image-20201218142646599](E:\学习专用\数据库综合实验\资料整理\images\image-20201218142646599.png)
+![image-20201218142646599](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201218142646599.png)
 
 
 
-![image-20201218142727440](E:\学习专用\数据库综合实验\资料整理\images\image-20201218142727440.png)
+![image-20201218142727440](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201218142727440.png)
 
 ```sql
 select* from salary into outfile "salary.txt" character set utf8 FIELDS TERMINATED BY '\t' ;
@@ -2168,21 +2168,21 @@ select* from department into outfile "department.docx" character set utf8 FIELDS
 
 ```
 
-![image-20201218144512457](E:\学习专用\数据库综合实验\资料整理\images\image-20201218144512457.png)
+![image-20201218144512457](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201218144512457.png)
 
 然后在备份中目录（secure_file_priv 的value中目录。笔者导出时直接outfile   “salary.txt”这里会默认将数据导出到mysql/data下中 dbms数据库对应文件夹名dbms的目录下）：
 
-![image-20201218144756169](E:\学习专用\数据库综合实验\资料整理\images\image-20201218144756169.png)
+![image-20201218144756169](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201218144756169.png)
 
-![image-20201218145239171](E:\学习专用\数据库综合实验\资料整理\images\image-20201218145239171.png)
+![image-20201218145239171](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201218145239171.png)
 
 
 
 ##### 10.3.5.2根据上述任务所保存的文件，将相关数据恢复到基本表中，其中要求employee表在恢复之前事先随机删除几条记录，SQL语句中要求指定replace功能
 
-![image-20201218150712281](E:\学习专用\数据库综合实验\资料整理\images\image-20201218150712281.png)
+![image-20201218150712281](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201218150712281.png)
 
-## ![img](file:///C:\Users\ADMINI~1\AppData\Local\Temp\ksohtml14552\wps5.jpg)![img](E:\学习专用\数据库综合实验\资料整理\images\wps6.jpg) 
+## !![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps6.jpg) 
 
 可以发现，使用replace命令会首先删除表中和所插入数据中键相同的数据然后再导入数据。并且除了employeeId，name,education这三项外都是NULL。
 
@@ -2198,9 +2198,9 @@ select* from department into outfile "department.docx" character set utf8 FIELDS
 mysqldump -h localhost -P 3307 -u root -p dbms salary > backup/salary.sql
 ```
 
-![image-20201218194833086](E:\学习专用\数据库综合实验\资料整理\images\image-20201218194833086.png)
+![image-20201218194833086](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201218194833086.png)
 
-![image-20201218194803329](E:\学习专用\数据库综合实验\资料整理\images\image-20201218194803329.png)
+![image-20201218194803329](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201218194803329.png)
 
 ### 11.2.使用mysqldump命令备份整个DBEM数据库
 
@@ -2210,15 +2210,15 @@ mysqldump -h localhost -P 3307 -u root -p dbms --default-character-set=utf8 > ba
 
 将数据库dbms备份到当前所在目录中（你所在文件夹下使用指令的地方）backup文件夹下的dbms.sql文件中。
 
-![image-20201218195007875](E:\学习专用\数据库综合实验\资料整理\images\image-20201218195007875.png)
+![image-20201218195007875](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201218195007875.png)
 
-![image-20201218194929936](E:\学习专用\数据库综合实验\资料整理\images\image-20201218194929936.png)
+![image-20201218194929936](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201218194929936.png)
 
 ### 11.3.删除employee表，然后使用mysql命令，利用上述保存的文件恢复employee表
 
 ①首先删除employee表
 
-![image-20201218201559341](E:\学习专用\数据库综合实验\资料整理\images\image-20201218201559341.png)
+![image-20201218201559341](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201218201559341.png)
 
 ②从数据库dbms的的全备份dbms.sql中查询employee表的结构
 
@@ -2226,7 +2226,7 @@ mysqldump -h localhost -P 3307 -u root -p dbms --default-character-set=utf8 > ba
 sed -e'/./{H;$!d;}' -e 'x;/CREATE TABLE `employee`/!d;q' dbms.sql
 ```
 
-![image-20201218201748317](E:\学习专用\数据库综合实验\资料整理\images\image-20201218201748317.png)
+![image-20201218201748317](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201218201748317.png)
 
 ②使用查询的Employee表结构在MySQL中创建employee表
 
@@ -2251,7 +2251,7 @@ CREATE TABLE `employee` (
  
 ```
 
-![image-20201218203847259](E:\学习专用\数据库综合实验\资料整理\images\image-20201218203847259.png)
+![image-20201218203847259](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201218203847259.png)
 
 ③从dbms.sql备份中查询出employee表的数据，并保存到employee.sql文件中
 
@@ -2259,7 +2259,7 @@ CREATE TABLE `employee` (
 grep 'INSERT INTO `employee`' dbms.sql >employee.sql
 ```
 
-![image-20201218201955024](E:\学习专用\数据库综合实验\资料整理\images\image-20201218201955024.png)
+![image-20201218201955024](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201218201955024.png)
 
 ④从employee.sql中恢复数据到MySQL的dbms数据库中的employee表。
 
@@ -2267,7 +2267,7 @@ grep 'INSERT INTO `employee`' dbms.sql >employee.sql
 mysql -h 121.4.41.89 -P 3307 -u root -p dbms --default-character-set=utf8 < employee.sql
 ```
 
-![image-20201218221330238](E:\学习专用\数据库综合实验\资料整理\images\image-20201218221330238.png)
+![image-20201218221330238](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201218221330238.png)
 
 这样数据就完整地从全备份数据库dbms.sql中提取出来最终恢复到MySQL数据库了。
 
@@ -2279,7 +2279,7 @@ mysql -h 121.4.41.89 -P 3307 -u root -p dbms --default-character-set=utf8 < empl
 
 ①首先删除两条数据
 
-![image-20201218222233191](E:\学习专用\数据库综合实验\资料整理\images\image-20201218222233191.png)
+![image-20201218222233191](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201218222233191.png)
 
 ②从备份的salary.csv中恢复数据：
 
@@ -2287,9 +2287,9 @@ mysql -h 121.4.41.89 -P 3307 -u root -p dbms --default-character-set=utf8 < empl
 mysqlimport -h 121.4.41.89 -P 3307 -u root -p --default-character-set=utf8  --replace  dbms salary.csv;
 ```
 
-![image-20201218230050713](E:\学习专用\数据库综合实验\资料整理\images\image-20201218230050713.png)
+![image-20201218230050713](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201218230050713.png)
 
-![image-20201218230022613](E:\学习专用\数据库综合实验\资料整理\images\image-20201218230022613.png)
+![image-20201218230022613](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201218230022613.png)
 
 这样数据就完整地从全备份数据库dbms.sql中提取出来最终恢复到MySQL数据库了。
 
@@ -2356,7 +2356,7 @@ CREATE USER 'username'@'host' IDENTIFIED BY 'password';
 
 **关于创建用户时提示“Operation CREATE USER failed for   XXX”的解决办法**：
 
-![image-20201219185206053](E:\学习专用\数据库综合实验\资料整理\images\image-20201219185206053.png)
+![image-20201219185206053](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201219185206053.png)
 
 出现该原因的结果有可能是你使用了 
 
@@ -2372,7 +2372,7 @@ delete  from  mysql.user  where user ='user_1';
 drop user   用户
 ```
 
-![image-20201219185517676](E:\学习专用\数据库综合实验\资料整理\images\image-20201219185517676.png)
+![image-20201219185517676](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201219185517676.png)
 
 然后重新进行创建就好了：
 
@@ -2380,11 +2380,11 @@ drop user   用户
 create user 'user_1'@'%' identified by '123456';
 ```
 
-![image-20201219185556427](E:\学习专用\数据库综合实验\资料整理\images\image-20201219185556427.png)
+![image-20201219185556427](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201219185556427.png)
 
 ### 12.3用户授权
 
-![image-20201219111003565](E:\学习专用\数据库综合实验\资料整理\images\image-20201219111003565.png)
+![image-20201219111003565](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201219111003565.png)
 
 #### 12.3.1授权命令格式
 
@@ -2502,13 +2502,13 @@ UPDATE MYSQL.USER SET 属性名= 新属性值  WHERE  条件;
 update mysql.user set user ="user_3" ,authentication_string ="1234" where user ="user_1";
 ```
 
-![image-20201219192328977](E:\学习专用\数据库综合实验\资料整理\images\image-20201219192328977.png)
+![image-20201219192328977](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201219192328977.png)
 
 可以发现如果直接使用 set authentication_string ='新密码',那么该密码直接被填充到用户中而没有经过加密。而我们知道，MySQL的密码是经过加密的，因此这样子使用update修改密码是有问题的，在你登录时候虽然用户名和密码都正确，但是却没法进行登录，会提示“ Access denied for user 'user_3'@'117.154.88.249' (using password: YES)”。
 
 ​	MySQL8.0后请使用alter修改用户密码，因为在MySQL8.0以后的加密方式为caching_sha2_password，如果使用update修改密码会给user表中root用户的authentication_string字段下设置newpassowrd值，当再使用alter user 'root'@'localhost' identified by 'newpassword'修改密码时会一直报错，**必须清空后再修改**（如果不首先清空这个authentication_string，在使用alter user  进行修改时会发生“Operation ALTER USER failed for  XXX”的提示）
 
-![image-20201219194453549](E:\学习专用\数据库综合实验\资料整理\images\image-20201219194453549.png)
+![image-20201219194453549](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201219194453549.png)
 
 **因为authentication_string字段下只能是MySQL加密后的43位字符串密码，其他的会报格式错误，所以在MySQL8.0以后能修改密码的方法只能是使用alter来修改：**
 
@@ -2518,7 +2518,7 @@ ALTER USER   用户   IDENTIFIED  WITH mysql_native_password BY '新密码';
 ALTER USER 用户 IDENTIFIED BY ‘新密码’;
 ```
 
-![image-20201219194554533](E:\学习专用\数据库综合实验\资料整理\images\image-20201219194554533.png)
+![image-20201219194554533](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201219194554533.png)
 
 比如：将用户 ‘user_1’@‘%’ 的密码改为“1234”
 
@@ -2546,7 +2546,7 @@ show grants for  用户;
 show grants for 'user_1'@'%';
 ```
 
-![image-20201219140946410](E:\学习专用\数据库综合实验\资料整理\images\image-20201219140946410.png)
+![image-20201219140946410](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201219140946410.png)
 
 ### 12.6删除用户
 
@@ -2562,7 +2562,7 @@ drop user 用户;
 drop user  'user_1'@'%';
 ```
 
-![image-20201219185112596](E:\学习专用\数据库综合实验\资料整理\images\image-20201219185112596.png)
+![image-20201219185112596](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201219185112596.png)
 
 删除的是 用户 'user_1'@'%'。
 
@@ -2605,13 +2605,13 @@ delete from user where user=”user_1” and host=”localhost”;
 create user 'user_2'@'%' identified by "123456";
 ```
 
-![img](E:\学习专用\数据库综合实验\资料整理\images\wps7.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps7.jpg) 
 
-![img](E:\学习专用\数据库综合实验\资料整理\images\wps8.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps8.jpg) 
 
 ##### 12.7.2.将用户user_2的名称修改为user_3，并将其密码修改为1234
 
-![image-20201219223648097](E:\学习专用\数据库综合实验\资料整理\images\image-20201219223648097.png)
+![image-20201219223648097](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201219223648097.png)
 
 首先使用update mysql.user语句来更新user_2中的用户名
 
@@ -2620,7 +2620,7 @@ update  mysql.user set user ='user_3' where  user ='user_2' and host='%';
 ```
 
 
-![img](E:\学习专用\数据库综合实验\资料整理\images\wps9.jpg)
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps9.jpg)
 
 然后使用alter命令修改密码：
 
@@ -2628,19 +2628,19 @@ update  mysql.user set user ='user_3' where  user ='user_2' and host='%';
 alter user 'user_3'@'%' identified with mysql_native_password by '1234';
 ```
 
-![image-20201219225202606](E:\学习专用\数据库综合实验\资料整理\images\image-20201219225202606.png)
+![image-20201219225202606](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201219225202606.png)
 
 ##### 12.7.3.以user_1身份登陆数据库
 
-![image-20201219225740145](E:\学习专用\数据库综合实验\资料整理\images\image-20201219225740145.png)
+![image-20201219225740145](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/image-20201219225740145.png)
 
 从可以发现可以远程登录了。
 
 ##### 12.7.4.授予用户user_1对DBEM数据库中employee表的查询、插入、修改、删除等权限。
 
-![img](E:\学习专用\数据库综合实验\资料整理\images\wps11.jpg)
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps11.jpg)
 这时候user_1就有了对Employee表的增删查改功能了。
-![img](E:\学习专用\数据库综合实验\资料整理\images\wps12.jpg)
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps12.jpg)
 可以发现，user1只能访问dbms中的employee表的数据，并能进行增删查改功能。
 
  
@@ -2649,22 +2649,22 @@ alter user 'user_3'@'%' identified with mysql_native_password by '1234';
 
 首先给与user_1对salary表的查询权限：
 
-![img](E:\学习专用\数据库综合实验\资料整理\images\wps13.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps13.jpg) 
 
 然后将对salary表的查询权限给user_3:
 
-![img](E:\学习专用\数据库综合实验\资料整理\images\wps14.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps14.jpg) 
 
-![img](E:\学习专用\数据库综合实验\资料整理\images\wps15.jpg) 
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps15.jpg) 
 
-![img](E:\学习专用\数据库综合实验\资料整理\images\wps16.jpg)
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps16.jpg)
 
 
 
 ##### 12.7.7.回收user_1的employee表上的select权
 
 
-![img](E:\学习专用\数据库综合实验\资料整理\images\wps17.jpg)
+![img](https://gitee.com/ljf2402901363/picgo-images/raw/master/typora/wps17.jpg)
 
  可以发现，user_1上的表的select权限已经被收回了。
 
